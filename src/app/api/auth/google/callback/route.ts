@@ -23,6 +23,7 @@ export async function GET(req: NextRequest) {
   );
 
   const res = await oauth2Client.getToken(code || '');
+  console.log('res from google: ', res);
 
   const payload = res.tokens;
   const html = `

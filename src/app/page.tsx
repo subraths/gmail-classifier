@@ -1,10 +1,12 @@
 'use client';
 
-import { LocaleRouteNormalizer } from 'next/dist/server/normalizers/locale-route-normalizer';
 import React, { useEffect } from 'react';
+import { fetchGmailMessages } from './utils/fetch';
+import { gmail_v1 } from 'googleapis';
 
 export default function Home() {
   const [output, setOutput] = React.useState('');
+  const [messageIds, setMessageIds] = React.useState<string[]>();
 
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
@@ -50,16 +52,32 @@ export default function Home() {
       </form>
       <p>{output}</p>
 
-      <button
-        className="px-4 py-2 border hover:cursor-pointer"
-        onClick={async () => {
-          const res = await fetch('/api/auth/login');
-          const { url } = await res.json();
-          window.open(url, 'google-oauth', 'width=500,height=600');
-        }}
-      >
-        signin
-      </button>
+      <div>
+        <button
+          className="px-4 py-2 border hover:cursor-pointer"
+          onClick={async () => {
+            const res = await fetch('/api/auth/login');
+            const { url } = await res.json();
+            window.open(url, 'google-oauth', 'width=500,height=600');
+          }}
+        >
+          signin
+        </button>
+      </div>
+      <div>
+        <button
+          className="px-4 py-2 border hover:cursor-pointer"
+          onClick={async () => {
+            const data = await fetchGmailMessages();
+            setMessageIds(data);
+          }}
+        >
+          get mails
+        </button>
+      </div>
+      {messageIds?.map((msg) => (
+        <p>{msg}</p>
+      ))}
     </div>
   );
 }

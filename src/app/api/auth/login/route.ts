@@ -20,6 +20,7 @@ export async function GET(req: NextRequest) {
   );
 
   const url = oauth2Client.generateAuthUrl({
+    access_type: 'offline',
     scope: SCOPES,
   });
 
