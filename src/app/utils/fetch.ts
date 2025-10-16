@@ -1,8 +1,9 @@
-import { gmail_v1 } from 'googleapis';
 import { getAccessTokenFromLocalStorage } from './misc';
 
-export async function fetchGmailMessages(): Promise<string[]> {
-  const res = await fetch(`/api/gmail`, {
+export async function fetchGmailMessages(): Promise<
+  { id: string; message: string }[]
+> {
+  const res = await fetch(`/api/gmail?max-results=100`, {
     headers: {
       Authorization: await getAccessTokenFromLocalStorage(),
     },
@@ -11,4 +12,5 @@ export async function fetchGmailMessages(): Promise<string[]> {
 }
 export async function fetchGmailMessageById(msgId: string) {
   const res = await fetch(`/api/gmail/${msgId}`, {});
+  return res.json();
 }
